@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 require_once('../vendor/autoload.php');
 
@@ -24,7 +25,7 @@ if (! $jwt) {
 
 $secretKey  = 'MYKEY';
 JWT::$leeway += 60;
-$token = JWT::decode((string)$jwt, $secretKey, ['HS256']);
+$token = JWT::decode((string)$jwt, new Key($secretKey, 'HS256'));
 $now = new DateTimeImmutable();
 $serverName = "your.domain.name";
 

@@ -9,27 +9,27 @@ require_once('../vendor/autoload.php');
 
 if (! preg_match('/Bearer\s(\S+)/', $_SERVER['HTTP_AUTHORIZATION'], $matches)) {
     header('HTTP/1.0 400 Bad Request');
-    echo 'Token not found in request';
+    echo json_encode(array("message" => "Token not found in request"));
     exit;
 }
 
 $jwt = $matches[1];
-if (! $jwt) {
-    // No token was able to be extracted from the authorization header
+if (!$jwt) {
+    
     header('HTTP/1.0 400 Bad Request');
+    echo json_encode(array("message" => "No token was able to be extracted from the authorization header"));
     exit;
 }
 
 $secretKey  = 'MYKEY';
 $token = JWT::decode($jwt, new Key($secretKey, 'HS256'));
-$now = new DateTimeImmutable();
+$now = time();
 $serverName = "your.domain.name";
 
-if ($token->iss !== $serverName ||
-    $token->nbf > $now->getTimestamp() ||
-    $token->exp < $now->getTimestamp()) 
+if ($token->iss !== $serverName || $token->nbf > $now->getTimestamp() || $token->exp < $now->getTimestamp()) 
 {
     header('HTTP/1.1 401 Unauthorized');
+    echo json_encode(array("message" => "Expired Token"));
     exit;
 }
 
