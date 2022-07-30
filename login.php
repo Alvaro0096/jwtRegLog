@@ -7,8 +7,9 @@ use \Firebase\JWT\JWT;
 $email = '';
 $password = '';
 $userType = '';
+$conn = null;
 
-$databaseService = new DatabaseService();
+$databaseService = new DBConnection();
 $conn = $databaseService->getConnection();
 
 $data = json_decode(file_get_contents("php://input"));
@@ -18,6 +19,20 @@ $password = $data->password;
 $userType = $data->userType;
 
 $table_name = 'users';
+
+if($_SERVER['REQUEST_METHOD'] !== 'POST'){
+
+    echo 'Invalid REQUEST METHOD';
+    exit;
+
+} 
+
+if($email == '' || empty($email) || $password == '' || empty($password)){
+
+    echo 'Email and Password must be completed.';
+    exit;
+
+}
 
 $query = "SELECT user_id, user_email, user_pass, user_type FROM " . $table_name . " WHERE user_email = ? LIMIT 0,1";
 
@@ -39,8 +54,8 @@ if($num > 0){
         $issuer_claim = "your.domain.name"; // this can be the servername
         $audience_claim = "your.domain.name";
         $issuedat_claim = time(); // issued at
-        $notbefore_claim = $issuedat_claim + 1000; //not before in seconds
-        $expire_claim = $issuedat_claim + 3600; // expire time in seconds
+        $notbefore_claim = $issuedat_claim + 10; //not before in seconds
+        $expire_claim = $issuedat_claim + 600; // expire time in seconds
         $token = array(
             "iss" => $issuer_claim,
             "aud" => $audience_claim,
@@ -49,8 +64,8 @@ if($num > 0){
             "exp" => $expire_claim,
             "data" => array(
                 "id" => $id,
-                "email" => $email,
-                "userType" => $userType
+                "email" => $email, 
+                "userType" => $userType   
         ));
 
         http_response_code(200);
@@ -66,10 +81,14 @@ if($num > 0){
                 "expireAt" => $expire_claim
             ));
     }
-    else{
+    else
+    {
 
         http_response_code(401);
-        echo json_encode(array("message" => "Login failed.", "password" => $password));
+        echo "Login failed.";
+        exit;
     }
 }
+
+
 ?>

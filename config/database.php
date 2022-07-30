@@ -1,6 +1,6 @@
 <?php
-// used to get mysql database connection
-class DatabaseService{
+
+class DBConnection{
 
     private $db_host = "localhost";
     private $db_name = "tifosiusers";
