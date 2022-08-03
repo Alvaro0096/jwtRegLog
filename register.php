@@ -19,19 +19,14 @@ $userType = $data->userType;
 $table_name = 'users';
 
 if($_SERVER['REQUEST_METHOD'] !== 'POST'){
-
-    echo 'Invalid REQUEST METHOD.';
+    echo 'Invalid REQUEST METHOD.' . '<br>';
     exit;
-
 } 
 
-if($email == '' || empty($email) || $password == '' || empty($password)){
-
-    echo 'Email and Password must be completed.';
+if($email == '' || empty($email) || $password == '' || empty($password) || $userType == '' || empty($userType)){
+    echo 'Email, password and user type must be completed.' . '<br>';
     exit;
-
 } else {
-
     //=============================
     // INSERT USER
     //=============================
@@ -66,28 +61,21 @@ if($email == '' || empty($email) || $password == '' || empty($password)){
     $count = $checkStmt->rowCount();
 
     if($count > 0){
-
-    echo 'User already exist.';
-    return false; 
-
+        echo 'User already exist.' . '<br>';
+        return false; 
     }
 
-    if($email == '' || empty($email) || $password == '' || empty($password)){
-
-    echo 'Email or password cannot be empty.';
-    return false;
-
+    if($email == '' || empty($email) || $password == '' || empty($password) || $userType == '' || empty($userType)){
+        echo 'Email, password and user type cannot be empty.' . '<br>';
+        return false;
     } 
 
     if($stmt->execute()) {
-
-    http_response_code(200);
-    echo 'User was successfully registered.';
-
+        http_response_code(200);
+        echo 'User was successfully registered.' . '<br>';
     } else {
-
-    http_response_code(400);
-    echo 'Unable to register the user.';
+        http_response_code(400);
+        echo 'Unable to register the user.' . '<br>';
     }
 
 }

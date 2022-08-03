@@ -1,7 +1,8 @@
 <?php
 include_once './config/database.php';
 include_once './config/headers.php';
-require "../vendor/autoload.php";
+require '../vendor/autoload.php';
+
 use \Firebase\JWT\JWT;
 
 $email = '';
@@ -21,17 +22,13 @@ $userType = $data->userType;
 $table_name = 'users';
 
 if($_SERVER['REQUEST_METHOD'] !== 'POST'){
-
-    echo 'Invalid REQUEST METHOD';
+    echo json_encode(array('Error' => 'Invalid REQUEST METHOD.'));
     exit;
-
 } 
 
 if($email == '' || empty($email) || $password == '' || empty($password)){
-
-    echo 'Email and Password must be completed.';
+    echo json_encode(array('Error' => 'Email and Password must be completed.'));
     exit;
-
 }
 
 $query = "SELECT user_id, user_email, user_pass, user_type FROM " . $table_name . " WHERE user_email = ? LIMIT 0,1";
@@ -48,14 +45,13 @@ if($num > 0){
     $password2 = $row['user_pass'];
     $userType = $row['user_type'];
 
-    if(password_verify($password, $password2))
-    {
+    if(password_verify($password, $password2)){
         $secret_key = "MYKEY";
-        $issuer_claim = "your.domain.name"; // this can be the servername
-        $audience_claim = "your.domain.name";
+        $issuer_claim = "http://localhost"; // this can be the servername
+        $audience_claim = "http://localhost";
         $issuedat_claim = time(); // issued at
         $notbefore_claim = $issuedat_claim + 10; //not before in seconds
-        $expire_claim = $issuedat_claim + 600; // expire time in seconds
+        $expire_claim = $issuedat_claim + 6000; // expire time in seconds
         $token = array(
             "iss" => $issuer_claim,
             "aud" => $audience_claim,
@@ -73,19 +69,16 @@ if($num > 0){
         $jwt = JWT::encode($token, $secret_key, 'HS256');
         echo json_encode(
             array(
-                "message" => "Successful login.",
+                "message" => "Successful login." . '<br>',
                 "jwt" => $jwt,
                 "id" => $id,
                 "email" => $email,
                 "userType" => $userType,
                 "expireAt" => $expire_claim
             ));
-    }
-    else
-    {
-
+    } else {
         http_response_code(401);
-        echo "Login failed.";
+        echo json_encode(array('Error' => 'Login failed.'));
         exit;
     }
 }

@@ -2,19 +2,27 @@
 include_once '../config/database.php';
 include_once '../config/headers.php';
 include_once './request.class.php';
-
-if(!$_SERVER['HTTP_AUTHORIZATION']){
-    header('HTTP/1.0 400 Bad Request');
-    echo 'Token not found in request';
-    exit;
-}
+include_once './validate.php';
 
 if($_SERVER['REQUEST_METHOD'] !== 'POST'){
-    echo 'Invalid REQUEST METHOD.';
+    echo json_encode(array('Error' => 'Invalid REQUEST METHOD.'));
     exit;
 } 
 
-$request = new Request();
-$request->getData();
+if(!$_SERVER['HTTP_AUTHORIZATION']){
+    header('HTTP/1.0 400 Bad Request');
+    echo json_encode(array('Error' => 'Token not found in request.'));
+    exit;
+}
+
+$validate = new Validate();
+$validate->validateToken();
+
+if($validate->tokenCheck){
+    $request = new Request();
+    $request->getCards();
+} else {
+    echo json_encode(array('Error' => 'The token is not valid.'));
+}
 
 ?>

@@ -7,32 +7,30 @@ class Update{
     private $conn;
 
     public function __construct(){
-
         $databaseService = new DBConnection();
         $this->conn = $databaseService->getConnection();
-
     }
 
-    public function updateData($email, $password, $userType){
-
-        $query = 'UPDATE users SET user_email = :user_email, user_pass = :user_pass, user_type = :user_type WHERE user_id = 10';
+    public function updateData($cardName, $cardImg, $cardSize, $cardId){
+        $query = 'UPDATE cardsinfo SET name = :card_name, images = :card_image, size = :card_size WHERE id = :card_id';
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':user_email', $email);
-        $stmt->bindParam(':user_pass', $password);
-        $stmt->bindParam(':user_type', $userType);
+        $stmt->bindParam(':card_name', $cardName);
+        $stmt->bindParam(':card_image', $cardImg);
+        $stmt->bindParam(':card_size', $cardSize);
+        $stmt->bindParam(':card_id', $cardId);
+        $stmt->execute();
+        $num = $stmt->rowCount();
 
-        if($stmt->execute()){
-            echo 'User updated successfully.';
-        } else {
-            echo 'Cannot updated user.';
+        if($num <= 0){
+            echo json_encode(array('Error' => 'Cannot updated card. The card does not exist.'));
+            exit;
         }
-        
+
+        echo json_encode(array('Success' => 'Card updated successfully.'));
     }
 
     public function __destruct(){
-
         return $this->conn = null;
-
     }
 }
 
