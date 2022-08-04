@@ -69,7 +69,7 @@ if($num > 0){
         $jwt = JWT::encode($token, $secret_key, 'HS256');
         echo json_encode(
             array(
-                "message" => "Successful login." . '<br>',
+                "message" => "Successful login.",
                 "jwt" => $jwt,
                 "id" => $id,
                 "email" => $email,

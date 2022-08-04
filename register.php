@@ -19,12 +19,12 @@ $userType = $data->userType;
 $table_name = 'users';
 
 if($_SERVER['REQUEST_METHOD'] !== 'POST'){
-    echo 'Invalid REQUEST METHOD.' . '<br>';
+    echo json_encode(array('Error' => 'Invalid REQUEST METHOD.'));
     exit;
 } 
 
 if($email == '' || empty($email) || $password == '' || empty($password) || $userType == '' || empty($userType)){
-    echo 'Email, password and user type must be completed.' . '<br>';
+    echo json_encode(array('Error' => 'Email, password and user type must be completed.'));
     exit;
 } else {
     //=============================
@@ -61,23 +61,22 @@ if($email == '' || empty($email) || $password == '' || empty($password) || $user
     $count = $checkStmt->rowCount();
 
     if($count > 0){
-        echo 'User already exist.' . '<br>';
+        echo json_encode(array('Error' => 'User already exist.'));
         return false; 
     }
 
     if($email == '' || empty($email) || $password == '' || empty($password) || $userType == '' || empty($userType)){
-        echo 'Email, password and user type cannot be empty.' . '<br>';
+        echo json_encode(array('Error' => 'Email, password and user type cannot be empty.'));
         return false;
     } 
 
     if($stmt->execute()) {
         http_response_code(200);
-        echo 'User was successfully registered.' . '<br>';
+        echo json_encode(array('Success' => 'User was successfully registered.'));
     } else {
         http_response_code(400);
-        echo 'Unable to register the user.' . '<br>';
+        echo json_encode(array('Error' => 'Unable to register the user.'));
     }
-
 }
 
 ?>

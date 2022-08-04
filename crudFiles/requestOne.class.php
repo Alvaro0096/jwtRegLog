@@ -12,7 +12,7 @@ class RequestOne{
     }
 
     public function getOneCard($id){
-        $query = 'SELECT * FROM cardsinfo WHERE id = :card_id limit 1';
+        $query = 'SELECT * FROM cardsinfo WHERE id = :card_id LIMIT 1';
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':card_id', $id);
         $stmt->execute();

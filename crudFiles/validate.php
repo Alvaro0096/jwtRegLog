@@ -24,22 +24,22 @@ class Validate{
             exit;
         }
         
-        $secretKey  = 'MYKEY';
-        $token = JWT::decode($jwt, new Key($secretKey, 'HS256'));
+        $secret_key  = 'MYKEY';
+        $token = JWT::decode($jwt, new Key($secret_key, 'HS256'));
         $now = new DateTimeImmutable();
         $issuer_claim = "http://localhost";
         
         if($token->iss !== $issuer_claim || $token->nbf > $now->getTimestamp() || $token->exp < $now->getTimestamp()){
             header('HTTP/1.1 401 Unauthorized');
-            echo json_encode(array('Error' => 'Expired Token.'));
+            echo json_encode(array('Error' => 'Expired Token. You must login again.'));
             exit;
         }
         
-        if(empty($token->data) || $token->data->userType !== 'Admin'){
-            echo json_encode(array('Error' => 'Unable to access. User must be Admin type.'));
+        if(empty($token->data)){
+            echo json_encode(array('Error' => 'Unable to access. The token data is empty.'));
             exit;
         }
-
+        
         $this->tokenCheck = true;
     }
 }
