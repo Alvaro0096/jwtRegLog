@@ -21,14 +21,14 @@ $data = json_decode($jsonData, true);
 $id = $data['id'];
 
 if($id == '' || empty($id)){
-    echo json_encode(array('Error' => 'ID cannot be empty.'));
+    echo json_encode(array('Error' => 'The id cannot be empty.'));
     exit;
 }
 
-$validate = new Validate();
-$validate->validateToken();
+$verifyToken = new Validate();
+$verifyToken->validateToken();
 
-if($validate->tokenCheck){
+if($verifyToken->resultArr['valid'] === true){
     $request = new RequestOne();
     $request->getOneCard($id);
 } else {

@@ -15,10 +15,10 @@ if(!$_SERVER['HTTP_AUTHORIZATION']){
     exit;
 }
 
-$validate = new Validate();
-$validate->validateToken();
+$verifyToken = new Validate();
+$verifyToken->validateToken();
 
-if($validate->tokenCheck){
+if($verifyToken->resultArr['valid'] === true){
     $request = new Request();
     $request->getCards();
 } else {

@@ -21,18 +21,18 @@ $data = json_decode($jsonData, true);
 $cardId = $data['cardId'];
 
 if($cardId == '' || empty($cardId)){
-    echo json_encode(array('Error' => 'Id cannot be empty. An Id is required to select the card to delete.'));
+    echo json_encode(array('Error' => 'An Id is required to select the card to delete.'));
     exit;
 }
 
-$validate = new Validate();
-$validate->validateToken();
+$verifyToken = new Validate();
+$verifyToken->validateToken();
 
-if($validate->tokenCheck){
+if($verifyToken->resultArr['valid'] === true && $verifyToken->resultArr['userType'] === 'ADMIN'){
     $request = new Delete();
     $request->deleteData($cardId);
 } else {
-    echo json_encode(array('Error' => 'The token is not valid.'));
+    echo json_encode(array('Error' => 'The token or user permissions are invalid.'));
 }
 
 ?>

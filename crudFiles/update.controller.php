@@ -27,18 +27,18 @@ if($cardName == '' || empty($cardName)
     || $cardImg == '' || empty($cardImg) 
     || $cardSize == '' || empty($cardSize) 
     || $cardId == '' || empty($cardId)){
-    echo json_encode(array('Error' => 'Card name, card image and card size cannot be empty. An Id is required to select the card to modify.'));
+    echo json_encode(array('Error' => 'Card name, card image and card size cannot be empty. An id is required to select the card to modify.'));
     exit;
 }
 
-$validate = new Validate();
-$validate->validateToken();
+$verifyToken = new Validate();
+$verifyToken->validateToken();
 
-if($validate->tokenCheck){
+if($verifyToken->resultArr['valid'] === true && $verifyToken->resultArr['userType'] === 'ADMIN'){
     $request = new Update();
     $request->updateData($cardName, $cardImg, $cardSize, $cardId);
 } else {
-    echo json_encode(array('Error' => 'The token is not valid.'));
+    echo json_encode(array('Error' => 'The token or user permissions are invalid.'));
 }
 
 ?>

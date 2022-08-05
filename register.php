@@ -4,7 +4,6 @@ include_once './config/headers.php';
 
 $email = '';
 $password = '';
-$userType = '';
 $conn = null;
 
 $databaseService = new DBConnection();
@@ -14,7 +13,7 @@ $data = json_decode(file_get_contents("php://input"));
 
 $email = $data->email;
 $password = $data->password;
-$userType = $data->userType;
+$confirmPassword = $data->confirmPassword;
 
 $table_name = 'users';
 
@@ -23,7 +22,7 @@ if($_SERVER['REQUEST_METHOD'] !== 'POST'){
     exit;
 } 
 
-if($email == '' || empty($email) || $password == '' || empty($password) || $userType == '' || empty($userType)){
+if($email == '' || empty($email) || $password == '' || empty($password)){
     echo json_encode(array('Error' => 'Email, password and user type must be completed.'));
     exit;
 } else {
@@ -33,17 +32,20 @@ if($email == '' || empty($email) || $password == '' || empty($password) || $user
 
     $query = "INSERT INTO " . $table_name . "
     SET user_email = :email,
-        user_pass = :password,
-        user_type = :userType";
+        user_pass = :password";
 
     $stmt = $conn->prepare($query);
 
     $stmt->bindParam(':email', $email);
     $stmt->bindParam(':password', $password);
-    $stmt->bindParam(':userType', $userType);
 
-    $password_hash = password_hash($password, PASSWORD_BCRYPT);
-
+    if($password === $confirmPassword){
+        $password_hash = password_hash($password, PASSWORD_BCRYPT);
+    } else {
+        echo json_encode(array('Error' => 'The passwords do not match.'));
+        exit;
+    } 
+    
     $stmt->bindParam(':password', $password_hash);
 
     //=============================
@@ -65,7 +67,7 @@ if($email == '' || empty($email) || $password == '' || empty($password) || $user
         return false; 
     }
 
-    if($email == '' || empty($email) || $password == '' || empty($password) || $userType == '' || empty($userType)){
+    if($email == '' || empty($email) || $password == '' || empty($password)){
         echo json_encode(array('Error' => 'Email, password and user type cannot be empty.'));
         return false;
     } 
