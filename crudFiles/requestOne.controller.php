@@ -18,9 +18,9 @@ if($_SERVER['REQUEST_METHOD'] !== 'POST'){
 $jsonData = file_get_contents('php://input');
 $data = json_decode($jsonData, true);
 
-$id = $data['id'];
+$cardId = $data['cardId'];
 
-if($id == '' || empty($id)){
+if($cardId == '' || empty($cardId)){
     echo json_encode(array('Error' => 'The id cannot be empty.'));
     exit;
 }
@@ -30,7 +30,7 @@ $verifyToken->validateToken();
 
 if($verifyToken->resultArr['valid'] === true){
     $request = new RequestOne();
-    $request->getOneCard($id);
+    $request->getOneCard($cardId);
 } else {
     echo json_encode(array('Error' => 'The token is not valid.'));
 }

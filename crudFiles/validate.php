@@ -53,7 +53,4 @@ class Validate{
     }
 }
 
-// $a = new Validate;
-// $a->validateToken();
-// print_r($a->resultArr);
 ?>

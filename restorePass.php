@@ -67,7 +67,7 @@ if(empty($email) || $email == ''){
     }
 
     if($insertStmt->execute()) {
-        echo json_encode(array('Success' => 'User was successfully registered.'));
+        echo json_encode(array('Success' => 'User was successfully validated.'));
     }
 }
 
@@ -77,8 +77,8 @@ try {
     $mail->isSMTP();                                            //Send using SMTP
     $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
     $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-    $mail->Username   = 'testemail';                     //SMTP username
-    $mail->Password   = 'testemail';                               //SMTP password
+    $mail->Username   = '';                     //SMTP username
+    $mail->Password   = '';                               //SMTP password
     $mail->SMTPSecure = 'tsl';            //Enable implicit TLS encryption
     $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 

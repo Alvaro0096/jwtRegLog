@@ -38,7 +38,7 @@ if($verifyToken->resultArr['valid'] === true && $verifyToken->resultArr['userTyp
     $request = new Update();
     $request->updateData($cardName, $cardImg, $cardSize, $cardId);
 } else {
-    echo json_encode(array('Error' => 'The token or user permissions are invalid.'));
+    echo json_encode(array('Error' => "The token is invalid or the user don't have permissions."));
 }
 
 ?>
